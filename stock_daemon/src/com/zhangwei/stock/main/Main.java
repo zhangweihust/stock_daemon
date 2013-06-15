@@ -3,6 +3,7 @@ package com.zhangwei.stock.main;
 import com.zhangwei.stock.service.DailyTask;
 
 public class Main {
+	static DailyTask dt;
 
 	/**
 	 * @param args
@@ -10,8 +11,11 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		DailyTask dt = new DailyTask();
-		dt.start();
+		if(!dt.isAlive()){
+			dt = new DailyTask();
+			dt.start();
+		}
+
 	}
 
 }
