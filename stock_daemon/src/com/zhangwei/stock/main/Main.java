@@ -11,8 +11,8 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		if(!dt.isAlive()){
-			dt = new DailyTask();
+		if(dt==null || !dt.isAlive()){
+			dt = new DailyTask(args[0]);
 			dt.start();
 		}
 

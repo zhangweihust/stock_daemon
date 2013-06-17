@@ -53,8 +53,10 @@ public class SDCardStorageManager {
 		cache = new HashMap<String, StorageValue>();
 		gson = new Gson();
 
+		Log.e(TAG, "Environment.getExternalStorageDirectory() : " + Environment.getExternalStorageDirectory());
 		File appDataPath = new File(Environment.getExternalStorageDirectory(), storage_dir_in_sdcard);
 		app_data_dir = appDataPath.getAbsolutePath();
+		Log.e(TAG, "app_data_dir : " + app_data_dir);
 		if(!appDataPath.exists()) {
 			appDataPath.mkdirs();
 		}

@@ -3,6 +3,7 @@ package com.zhangwei.stock.service;
 
 import java.util.Date;
 
+import com.zhangwei.stock.androidconvert.Environment;
 import com.zhangwei.stock.androidconvert.Log;
 import com.zhangwei.stock.gson.Stock;
 import com.zhangwei.stock.gson.StockList;
@@ -17,6 +18,11 @@ public class DailyTask extends Thread {
 	private boolean update;
 	private boolean isAbort;
 	private String completeID;
+	
+	public DailyTask(String path){
+		Environment.parent_path = path;
+		Log.e(TAG, "DailyTask() - path:" + path);
+	}
 	
 	public void run() {
 		update = false;
