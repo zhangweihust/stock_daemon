@@ -21,7 +21,7 @@ public class DailyTask extends Thread {
 	
 	public DailyTask(String path){
 		Environment.parent_path = path;
-		Log.e(TAG, "DailyTask() - path:" + path);
+		Log.i(TAG, "DailyTask() - path:" + path);
 	}
 	
 	public void run() {
@@ -42,7 +42,7 @@ public class DailyTask extends Thread {
 		//stocklist.setlastScanID("sh600001");
 		
 		do{
-			Log.e(TAG, " curScanStockID:" + curScanStockID + " errCount:" + errCount + " retry:" + retry);
+			Log.i(TAG, " curScanStockID:" + curScanStockID + " errCount:" + errCount + " retry:" + retry);
 			if(errCount<1){
 				curScanStockID = stocklist.getCurStockID();
 				Date lastscan_day = new Date(stocklist.getlastScanTime());
@@ -54,7 +54,7 @@ public class DailyTask extends Thread {
 				
 				if(curScanStockID.equals(StockList.TAIL)){
 					if(DateUtils.compareDay(lastscan_day, now_day)==0){
-						Log.e(TAG,"last scan time is the same day of the today, ingore");
+						Log.i(TAG,"last scan time is the same day of the today, ingore");
 						completeID = StockList.TAIL;
 						break;
 					}else{
@@ -69,7 +69,7 @@ public class DailyTask extends Thread {
 				
 			}else{
 				if(TencentStockHelper.getInstance().judgeNetwork()){
-					Log.e(TAG, "www.baidu.com is ok");
+					Log.i(TAG, "www.baidu.com is ok");
 					//网络可用情况下，如果重试超过3次，则说明目的端有问题，取下一个
 					if(retry>3){
 						retry=0;
@@ -81,7 +81,7 @@ public class DailyTask extends Thread {
 					retry++;
 
 				}else{
-					Log.e(TAG, "www.baidu.com not connected");
+					Log.i(TAG, "www.baidu.com not connected");
 					//没有网络就一直连接百度看是否能连上
 					try {
 						Thread.sleep(10000);
@@ -92,10 +92,10 @@ public class DailyTask extends Thread {
 				}
 			}
 
-			Log.e(TAG, "curScanStockID:" + curScanStockID);
+			Log.i(TAG, "curScanStockID:" + curScanStockID);
 			
 /*			if(isCancelled()){
-				Log.e(TAG, "isCancelled, curScanStockID:" + curScanStockID);
+				Log.i(TAG, "isCancelled, curScanStockID:" + curScanStockID);
 				isAbort = true;
 				break;
 			}*/
@@ -105,7 +105,7 @@ public class DailyTask extends Thread {
 			
 			Stock stock = TencentStockHelper.getInstance().get_stock_from_tencent(curScanStockID);
 			if(stock!=null){
-				Log.e(TAG, "a stock done,  stock.id:" + stock.id);
+				Log.i(TAG, "a stock done,  stock.id:" + stock.id);
 				//lastStockID = stock.id;
 				//实时记录扫描的id到dailyList中
 				//stocklist.setlastScanID(lastStockID);
@@ -138,14 +138,14 @@ public class DailyTask extends Thread {
 
 
 		
-		Log.e(TAG, "loop over, update:" + update + " isAbort:" + isAbort + " completeID:" + completeID);
+		Log.i(TAG, "loop over, update:" + update + " isAbort:" + isAbort + " completeID:" + completeID);
 
 		if(update){
 			if(!isAbort){
 				//完成这次扫描(中途被终止的不算)，记录时间
 				stocklist.setlastScanTime(System.currentTimeMillis());
 			}
-			Log.e(TAG, "persistStockList!");
+			Log.i(TAG, "persistStockList!");
 			StockListHelper.getInstance().persistStockList(stocklist);
 		}
 

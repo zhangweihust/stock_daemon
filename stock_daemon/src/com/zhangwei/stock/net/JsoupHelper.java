@@ -165,7 +165,7 @@ public class JsoupHelper {
 		ArrayList<Element> r =  new ArrayList<Element>();
 		if(level>=cssQuerys.length){
 			//found
-/*			Log.e(TAG, "Path:" + getPath(level));
+/*			Log.i(TAG, "Path:" + getPath(level));
 			Log.i(TAG,  "Element:" + input.html());*/
 			r.add(input);
 			return r;

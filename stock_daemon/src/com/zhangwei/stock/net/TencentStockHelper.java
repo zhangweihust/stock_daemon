@@ -92,7 +92,7 @@ public class TencentStockHelper {
 
 			}
 
-			//Log.e("ok", "rank:" + rank.attr("class"));
+			//Log.i("ok", "rank:" + rank.attr("class"));
 			
 			Element qt_ctn1 = doc.body().getElementById("qt-ctn1");
 			if(qt_ctn1!=null){
@@ -104,7 +104,7 @@ public class TencentStockHelper {
 
 			}
 
-			//Log.e("ok", "stockname : " + stockname.text()); //
+			//Log.i("ok", "stockname : " + stockname.text()); //
 
 			Element righttd = doc.body().getElementById("righttd");
 			if(righttd!=null){
@@ -157,7 +157,7 @@ public class TencentStockHelper {
 				Date now = new Date();
 				DateFormat df = DateFormat.getDateInstance();
 				stock.scan_date = df.format(now);
-				Log.e("test", "stock.scan_date:" + stock.scan_date);
+				Log.i("test", "stock.scan_date:" + stock.scan_date);
 			}else{
 				return null;
 			}
@@ -186,7 +186,7 @@ public class TencentStockHelper {
 		
 		String id = Pattern.compile("[a-zA-Z]").matcher(stock.id).replaceAll("");
 		String connect_url = ycgz_url_prefix + id + ".htm";
-		Log.e("test", "fetch_ycgz connect_url:" + connect_url);
+		Log.i("test", "fetch_ycgz connect_url:" + connect_url);
 		
 		JsoupHelper jh = new JsoupHelper();
 		try {
@@ -201,7 +201,7 @@ public class TencentStockHelper {
 				Double min = 999999999.0;
 				for(TextNode tn : values.textNodes()){
 					if(InputCheck.checkNum(tn.text().trim())){
-						//Log.e("stock qujian", tn.text());
+						//Log.i("stock qujian", tn.text());
 						Double temp = -1.0;
 						try{
 							temp = Double.valueOf(tn.text().trim());
@@ -221,12 +221,12 @@ public class TencentStockHelper {
 				DecimalFormat df = new DecimalFormat(".##");
 				if(max>0.0){
 					stock.stockEstimateHighValue = df.format(max);
-					Log.e("stockEstimateHighValue", stock.stockEstimateHighValue );
+					Log.i("stockEstimateHighValue", stock.stockEstimateHighValue );
 				}
 				
 				if(min<999999999.0){
 					stock.stockEstimateLowValue = df.format(min);;
-					Log.e("stockEstimateLowValue", stock.stockEstimateLowValue );
+					Log.i("stockEstimateLowValue", stock.stockEstimateLowValue );
 				}
 			}
 
@@ -239,13 +239,13 @@ public class TencentStockHelper {
 			String[] stockQualityTexts = jh.getTextFromElement(stockQualityElement);
 			if(stockQualityTexts!=null && stockQualityTexts.length>0){
 				stock.stockQuality = stockQualityTexts[0].replaceAll("[:： ]", "");
-				Log.e(TAG, Constants.stockQuality + " :" + stock.stockQuality);
+				Log.i(TAG, Constants.stockQuality + " :" + stock.stockQuality);
 				
 				
 				Element stockSafeDetailElement = jh.search(doc.body(), "td.gray_bottom_solid/tbody/td", "0/0/2");
 				if(stockSafeDetailElement!=null){
 					stock.stockQuality_detail = stockSafeDetailElement.text();
-					Log.e(TAG, Constants.stockQuality + "细节 :" + stock.stockQuality_detail);
+					Log.i(TAG, Constants.stockQuality + "细节 :" + stock.stockQuality_detail);
 				}
 				
 			}
@@ -255,12 +255,12 @@ public class TencentStockHelper {
 			String[] stockIncrementTexts = jh.getTextFromElement(stockIncrementElement);
 			if(stockIncrementTexts!=null && stockIncrementTexts.length>0){
 				stock.stockIncrement = stockIncrementTexts[0].replaceAll("[:： ]", "");
-				Log.e(TAG, Constants.stockIncrement + " :" + stock.stockIncrement);
+				Log.i(TAG, Constants.stockIncrement + " :" + stock.stockIncrement);
 				
 				Element stockIncrementDetailElement = jh.search(doc.body(), "td.gray_bottom_solid/tbody/td", "0/0/4");
 				if(stockIncrementDetailElement!=null){
 					stock.stockIncrement_detail = stockIncrementDetailElement.text();
-					Log.e(TAG, Constants.stockIncrement + "细节 :" + stock.stockIncrement_detail);
+					Log.i(TAG, Constants.stockIncrement + "细节 :" + stock.stockIncrement_detail);
 				}
 			}
 			
@@ -269,12 +269,12 @@ public class TencentStockHelper {
 			String[] stockSafeTexts = jh.getTextFromElement(stockSafeElement);
 			if(stockSafeTexts!=null && stockSafeTexts.length>0){
 				stock.stockSafe = stockSafeTexts[0].replaceAll("[:： ]", "");
-				Log.e(TAG, Constants.stockSafe + " :" + stock.stockSafe);
+				Log.i(TAG, Constants.stockSafe + " :" + stock.stockSafe);
 
 				Element stockSafeDetailElement = jh.search(doc.body(), "td.gray_bottom_solid/tbody/td", "0/0/6");
 				if(stockSafeDetailElement!=null){
 					stock.stockSafe_detail = stockSafeDetailElement.text();
-					Log.e(TAG, Constants.stockSafe + "细节 :" + stock.stockSafe_detail);
+					Log.i(TAG, Constants.stockSafe + "细节 :" + stock.stockSafe_detail);
 				}
 			}
 			
@@ -283,12 +283,12 @@ public class TencentStockHelper {
 			String[] stockMarketValueTexts = jh.getTextFromElement(stockMarketValueElement);
 			if(stockQualityTexts!=null && stockMarketValueTexts.length>0){
 				stock.stockMarketValue = stockMarketValueTexts[0].replaceAll("[:： ]", "");
-				Log.e(TAG, Constants.stockMarketValue + " :" + stock.stockMarketValue);
+				Log.i(TAG, Constants.stockMarketValue + " :" + stock.stockMarketValue);
 				
 				Element stockMarketValueDetailElement = jh.search(doc.body(), "td.gray_bottom_solid/tbody/td", "1/0/2");
 				if(stockMarketValueDetailElement!=null){
 					stock.stockMarketValue_detail = stockMarketValueDetailElement.text();
-					Log.e(TAG, Constants.stockMarketValue + "细节 :" + stock.stockMarketValue_detail);
+					Log.i(TAG, Constants.stockMarketValue + "细节 :" + stock.stockMarketValue_detail);
 				}
 			}
 			
@@ -297,12 +297,12 @@ public class TencentStockHelper {
 			String[] stockAssetValueTexts = jh.getTextFromElement(stockAssetValueTextsElement);
 			if(stockAssetValueTexts!=null && stockAssetValueTexts.length>0){
 				stock.stockAssetValue = stockAssetValueTexts[0].replaceAll("[:： ]", "");
-				Log.e(TAG, Constants.stockAssetValue + " :" + stock.stockAssetValue);
+				Log.i(TAG, Constants.stockAssetValue + " :" + stock.stockAssetValue);
 				
 				Element stockAssetValueDetailElement = jh.search(doc.body(), "td.gray_bottom_solid/tbody/td", "1/0/4");
 				if(stockAssetValueDetailElement!=null){
 					stock.stockAssetValue_detail = stockAssetValueDetailElement.text();
-					Log.e(TAG, Constants.stockAssetValue + "细节 :" + stock.stockAssetValue_detail);
+					Log.i(TAG, Constants.stockAssetValue + "细节 :" + stock.stockAssetValue_detail);
 				}
 			}
 			
@@ -312,12 +312,12 @@ public class TencentStockHelper {
 			String[] stockReturnValueTexts = jh.getTextFromElement(stockReturnValueTextsElement);
 			if(stockReturnValueTexts!=null && stockReturnValueTexts.length>0){
 				stock.stockReturnValue = stockReturnValueTexts[0].replaceAll("[:： ]", "");
-				Log.e(TAG, Constants.stockReturnValue + " :" + stock.stockReturnValue);
+				Log.i(TAG, Constants.stockReturnValue + " :" + stock.stockReturnValue);
 				
 				Element stockReturnValueElement = jh.search(doc.body(), "td.gray_bottom_solid/tbody/td", "1/0/6");
 				if(stockReturnValueElement!=null){
 					stock.stockReturnValue_detail = stockReturnValueElement.text();
-					Log.e(TAG, Constants.stockReturnValue + "细节 :" + stock.stockReturnValue_detail);
+					Log.i(TAG, Constants.stockReturnValue + "细节 :" + stock.stockReturnValue_detail);
 				}
 			}
 		    
@@ -342,7 +342,7 @@ public class TencentStockHelper {
 				for(Element elem :es3){
 					
 					if(elem.text()!=null && elem.text().contains("更新")){
-						Log.e("logo", elem.text());
+						Log.i("logo", elem.text());
 						stock.YC_Time = elem.text();
 					}
 				}	
