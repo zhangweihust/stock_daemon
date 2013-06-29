@@ -1,10 +1,10 @@
 package com.zhangwei.stock.main;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileLock;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import com.zhangwei.stock.net.SinaStockHelper;
 import com.zhangwei.stock.service.TencentDailyTask;
 
 public class Main {
@@ -16,7 +16,7 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		FileLock lck;
+/*		FileLock lck;
 		try {
 			lck = new FileOutputStream("D:\\.sobulldog_test\\_lock").getChannel().tryLock();
 			if (lck == null) {
@@ -36,7 +36,20 @@ public class Main {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
+		
+		SinaStockHelper ssh = SinaStockHelper.getInstance();
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");//小写的mm表示的是分钟  
+		String dstr="2010-10-10";  
+		try {
+			java.util.Date end_date=sdf.parse(dstr);
+			ssh.get_HistoryRecords_from_sina("300031", new Date(), end_date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		
 
 	}
 
