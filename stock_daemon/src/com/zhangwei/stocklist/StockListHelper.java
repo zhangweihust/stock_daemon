@@ -22,7 +22,7 @@ import com.zhangwei.stock.utils.DateUtils;
 public class StockListHelper {
 
 	private static  StockListHelper ins;
-	private static String TAG = "StockList";
+	private static String TAG = "StockListHelper";
 	
 	//private Context context;
 	private DailyList dailylist;

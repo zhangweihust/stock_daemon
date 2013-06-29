@@ -12,16 +12,16 @@ import com.zhangwei.stock.utils.DateUtils;
 import com.zhangwei.stocklist.StockListHelper;
 
 
-public class TencentDailyTask extends Thread {
-	private static final String TAG = "TencentDailyTask";
+public class SinaDailyTask extends Thread {
+	private static final String TAG = "SinaDailyTask";
 	private StockList stocklist;
 	private boolean update;
 	private boolean isAbort;
 	private String completeID;
 	
-	public TencentDailyTask(String path){
+	public SinaDailyTask(String path){
 		Environment.parent_path = path;
-		Log.e(TAG, "TencentDailyTask() - path:" + path);
+		Log.e(TAG, "SinaDailyTask() - path:" + path);
 	}
 	
 	public void run() {
@@ -155,3 +155,4 @@ public class TencentDailyTask extends Thread {
 	}
 
 }
+
