@@ -44,7 +44,7 @@ public class TencentDailyTask extends Thread {
 		do{
 			Log.i(TAG, " curScanStockID:" + curScanStockID + " errCount:" + errCount + " retry:" + retry);
 			if(errCount<1){
-				curScanStockID = stocklist.getCurStockID();
+				curScanStockID = stocklist.getlastScanID();
 				Date lastscan_day = new Date(stocklist.getlastScanTime());
 				Date now_day = new Date();
 				
@@ -59,7 +59,7 @@ public class TencentDailyTask extends Thread {
 						break;
 					}else{
 						//new day
-						stocklist.rewind();
+						stocklist.rewind(0);
 						errCount = 0;
 						retry = 0;
 						continue;
@@ -74,7 +74,7 @@ public class TencentDailyTask extends Thread {
 					if(retry>3){
 						retry=0;
 						errCount = 0;
-						stocklist.next();
+						stocklist.next(0);
 						continue;
 					}
 
@@ -111,7 +111,7 @@ public class TencentDailyTask extends Thread {
 				//stocklist.setlastScanID(lastStockID);
 				update = true;
 				completeID = stock.id;
-				stocklist.next();
+				stocklist.next(0);
 				stocklist.setlastScanTime(System.currentTimeMillis());
 				errCount = 0;
 				

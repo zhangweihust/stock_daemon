@@ -18,6 +18,16 @@ public class StockList {
 	long lastScanTime;
 	
 	/**
+	 *  {@literal 上次完成sina列表扫描的时间}
+	 * */
+	long lastHistoryRecordScanTime;
+	
+	/**
+	 *  {@literal 上次扫描的stockid， sh600031}
+	 * */
+	String lastHistoryRecordScanID;
+	
+	/**
 	 *  {@literal 上次完成发出通知的时间}
 	 * */
 	long lastNotifyTime;
@@ -32,6 +42,7 @@ public class StockList {
 	public transient static String ID = "_StockList_";
 	private transient static int index = -1;
 	public transient static String TAIL = "tail";
+	public transient static String HISTORY_TAIL = "history_tail";
 /*	public StockList(){
 		shangzheng_list = new ArrayList<String>();
 		shenzheng_list = new ArrayList<String>();
@@ -41,9 +52,22 @@ public class StockList {
 		lastScanID = null;
 	}*/
 	
-	private boolean seekTo(String stockID){
+	
+	/**
+	 *  type: 0 daily(default), 1 history 
+	 *  
+	 * */
+	private boolean seekTo(String stockID, int type){
 		boolean found = false;
-		if(stockID.equals(TAIL)){
+		String cmp_tail = null;
+		
+		if(type==0){
+			cmp_tail = TAIL;
+		}else{
+			cmp_tail = HISTORY_TAIL;
+		}
+		
+		if(stockID.equals(cmp_tail)){
 			found = true;
 			index = shangzheng_list.size() + shenzheng_list.size() + chuangye_list.size();
 		}else{
@@ -62,43 +86,71 @@ public class StockList {
 		return found;
 	}
 	
-	private void seekTo(int index){
+	/**
+	 *  type: 0 daily(default), 1 history 
+	 *  
+	 * */
+	private void seekTo(int index, int type){
 		
 		int sh_size = shangzheng_list.size();
 		int sz_size = shenzheng_list.size();
 		int cyb_size = chuangye_list.size();
-		
-		if(index<sh_size){
-			lastScanID =  shangzheng_list.get(index);
-			//index++;
-		}else if(index<sh_size+sz_size){			
-			lastScanID =  shenzheng_list.get(index-sh_size);
-			//index++;
-		}else if(index<sh_size+sz_size+cyb_size){
-			lastScanID =  chuangye_list.get(index-sh_size-sz_size);
-			//index++;
+		if(type==0){
+			if(index<sh_size){
+				lastScanID =  shangzheng_list.get(index);
+				//index++;
+			}else if(index<sh_size+sz_size){			
+				lastScanID =  shenzheng_list.get(index-sh_size);
+				//index++;
+			}else if(index<sh_size+sz_size+cyb_size){
+				lastScanID =  chuangye_list.get(index-sh_size-sz_size);
+				//index++;
+			}else{
+				//no-op
+				lastScanID = TAIL;
+			}
 		}else{
-			//no-op
-			lastScanID = TAIL;
+			if(index<sh_size){
+				lastHistoryRecordScanID =  shangzheng_list.get(index);
+				//index++;
+			}else if(index<sh_size+sz_size){			
+				lastHistoryRecordScanID =  shenzheng_list.get(index-sh_size);
+				//index++;
+			}else if(index<sh_size+sz_size+cyb_size){
+				lastHistoryRecordScanID =  chuangye_list.get(index-sh_size-sz_size);
+				//index++;
+			}else{
+				//no-op
+				lastHistoryRecordScanID = HISTORY_TAIL;
+			}
 		}
+
 	}
 	
-	public void rewind(){
+	/**
+	 *  type: 0 daily(default), 1 history 
+	 *  
+	 * */
+	public void rewind(int type){
 		index=0;
-		seekTo(index);
+		seekTo(index, type);
 	}
 	
-	public void next(){
-		seekTo(lastScanID);
+	/**
+	 *  type: 0 daily(default), 1 history 
+	 *  
+	 * */
+	public void next(int type){
+		seekTo(lastScanID, type);
 		index++;
-		seekTo(index);
+		seekTo(index, type);
 		
 
 	}
 	
-	public String getCurStockID(){		
+/*	public String getCurStockID(){		
 		return lastScanID;
-	}
+	}*/
 	
 	
 	public String getlastScanID(){
@@ -113,8 +165,27 @@ public class StockList {
 		return lastScanTime;
 	}
 	
+	
 	public void setlastScanTime(long time){
 		lastScanTime = time;
+	}
+	
+	//sina
+	public String getHistoryRecordScanID(){
+		return lastHistoryRecordScanID;
+	}
+	
+	public void setHistoryRecordScanID(String id){
+		lastHistoryRecordScanID = id;
+	}
+	
+	public long getHistoryRecordScanTime(){
+		return lastHistoryRecordScanTime;
+	}
+	
+	
+	public void setHistoryRecordScanTime(long time){
+		lastHistoryRecordScanTime = time;
 	}
 	
 	public long getlastNotifyTime(){

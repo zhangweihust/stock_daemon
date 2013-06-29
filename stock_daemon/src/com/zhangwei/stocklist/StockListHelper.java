@@ -34,7 +34,7 @@ public class StockListHelper {
 		stocklist = null;
 	}
 	
-	public static StockListHelper getInstance(){
+	public synchronized static StockListHelper getInstance(){
 		if(ins==null){
 			ins = new StockListHelper();
 		}
@@ -42,7 +42,7 @@ public class StockListHelper {
 		return ins;
 	}
 	
-	public StockList getStockList(){
+	public synchronized StockList getStockList(){
 		//1. from memory
 		if(stocklist!=null){
 			return stocklist;
@@ -97,7 +97,7 @@ public class StockListHelper {
 		return stocklist;
 	}
 	
-	public void persistStockList(StockList stocklist){
+	public synchronized void persistStockList(StockList stocklist){
 
 		//save to internal storage
 		if(stocklist!=null){
@@ -107,7 +107,7 @@ public class StockListHelper {
 
 	}
 	
-	public DailyList getDailyList(){
+	public synchronized DailyList getDailyList(){
 
 		//1. from memory
 		if(dailylist!=null){
@@ -162,7 +162,7 @@ public class StockListHelper {
 	}*/
 	
 	
-	public void persistLastStock(Stock stock){
+	public synchronized void persistLastStock(Stock stock){
 
 		//save to internal storage
 		if(stock!=null){
@@ -172,12 +172,12 @@ public class StockListHelper {
 
 	}
 	
-	public Stock getLastStock(String stockid){
+	public synchronized Stock getLastStock(String stockid){
 		return (Stock) SDCardStorageManager.getInstance()
 				                     .getItem("last", stockid, Stock.class);
 	}
 	
-	public void persistHistoryStock(Stock stock){
+	public synchronized void persistHistoryStock(Stock stock){
 		String date = DateUtils.dateToString(new Date(), "yyyyMMdd");
 		//save to internal storage
 		if(stock!=null){
@@ -192,7 +192,7 @@ public class StockListHelper {
 	 *  true 改变
 	 *  false 未改变
 	 * */
-	public static boolean isChangeStock(Stock left, Stock right){
+	public synchronized static boolean isChangeStock(Stock left, Stock right){
 		if(left==null && right!=null){
 			return true;
 		}else if(left!=null && right==null){
