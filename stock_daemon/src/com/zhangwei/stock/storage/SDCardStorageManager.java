@@ -53,10 +53,10 @@ public class SDCardStorageManager {
 		//cache = new HashMap<String, StorageValue>();
 		gson = new Gson();
 
-		Log.i(TAG, "Environment.getExternalStorageDirectory() : " + Environment.getExternalStorageDirectory());
+		Log.e(TAG, "Environment.getExternalStorageDirectory() : " + Environment.getExternalStorageDirectory());
 		File appDataPath = new File(Environment.getExternalStorageDirectory(), storage_dir_in_sdcard);
 		app_data_dir = appDataPath.getAbsolutePath();
-		Log.i(TAG, "app_data_dir : " + app_data_dir);
+		Log.e(TAG, "app_data_dir : " + app_data_dir);
 		if(!appDataPath.exists()) {
 			appDataPath.mkdirs();
 		}
@@ -68,7 +68,7 @@ public class SDCardStorageManager {
 
 	
 	private void load(String fileDir) {
-		Log.i(TAG, "StorageManager load -  fileDir:" + fileDir);
+		Log.e(TAG, "StorageManager load -  fileDir:" + fileDir);
 
 		File parentPath = new File(fileDir);
 		File[] filelist = parentPath.listFiles();
@@ -76,7 +76,7 @@ public class SDCardStorageManager {
 			if(f.isFile() && f.getName().startsWith(CHACHE_PREFIX)){
 				String key = f.getAbsolutePath()
 						      .substring(app_data_dir.length()+1);
-				Log.i(TAG, "cache.put key:" + key);
+				Log.e(TAG, "cache.put key:" + key);
 /*				synchronized (cache) {
 					cache.put(key, new StorageValue(key, (int) f.length()));
 				}*/

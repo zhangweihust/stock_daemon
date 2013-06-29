@@ -12,16 +12,16 @@ import com.zhangwei.stock.utils.DateUtils;
 import com.zhangwei.stocklist.StockListHelper;
 
 
-public class DailyTask extends Thread {
+public class TencentDailyTask extends Thread {
 	private static final String TAG = "DailyTask";
 	private StockList stocklist;
 	private boolean update;
 	private boolean isAbort;
 	private String completeID;
 	
-	public DailyTask(String path){
+	public TencentDailyTask(String path){
 		Environment.parent_path = path;
-		Log.i(TAG, "DailyTask() - path:" + path);
+		Log.e(TAG, "DailyTask() - path:" + path);
 	}
 	
 	public void run() {
@@ -54,7 +54,7 @@ public class DailyTask extends Thread {
 				
 				if(curScanStockID.equals(StockList.TAIL)){
 					if(DateUtils.compareDay(lastscan_day, now_day)==0){
-						Log.i(TAG,"last scan time is the same day of the today, ingore");
+						Log.e(TAG,"last scan time is the same day of the today, ingore");
 						completeID = StockList.TAIL;
 						break;
 					}else{

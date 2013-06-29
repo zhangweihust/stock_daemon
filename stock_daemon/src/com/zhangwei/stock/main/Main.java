@@ -5,10 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileLock;
 
-import com.zhangwei.stock.service.DailyTask;
+import com.zhangwei.stock.service.TencentDailyTask;
 
 public class Main {
-	static DailyTask dt;
+	static TencentDailyTask dt;
 
 	/**
 	 * @param args
@@ -18,16 +18,16 @@ public class Main {
 
 		FileLock lck;
 		try {
-			lck = new FileOutputStream("D:\\.sobulldog\\_lock").getChannel().tryLock();
+			lck = new FileOutputStream("D:\\.sobulldog_test\\_lock").getChannel().tryLock();
 			if (lck == null) {
-				System.out
+				System.err
 						.println("A previous instance is already running....");
 				System.exit(1);
 			}
-			System.out.println("This is the first instance of this program...");
+			System.err.println("This is the first instance of this program...");
 			// Do some work here.....
 			if (dt == null || !dt.isAlive()) {
-				dt = new DailyTask(args[0]);
+				dt = new TencentDailyTask(args[0]);
 				dt.start();
 			}
 		} catch (FileNotFoundException e) {
