@@ -1,12 +1,15 @@
 package com.zhangwei.stock.service;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.zhangwei.stock.androidconvert.Environment;
 import com.zhangwei.stock.androidconvert.Log;
+import com.zhangwei.stock.gson.HistoryRecord;
 import com.zhangwei.stock.gson.Stock;
 import com.zhangwei.stock.gson.StockList;
+import com.zhangwei.stock.net.SinaStockHelper;
 import com.zhangwei.stock.net.TencentStockHelper;
 import com.zhangwei.stock.utils.DateUtils;
 import com.zhangwei.stocklist.StockListHelper;
@@ -14,7 +17,6 @@ import com.zhangwei.stocklist.StockListHelper;
 
 public class SinaDailyTask extends Thread {
 	private static final String TAG = "SinaDailyTask";
-	private StockList stocklist;
 	private boolean update;
 	private boolean isAbort;
 	private String completeID;
@@ -27,9 +29,7 @@ public class SinaDailyTask extends Thread {
 	public void run() {
 		update = false;
 		isAbort = false;
-		completeID = null;
-		stocklist = StockListHelper.getInstance().getStockList();
-		
+		completeID = null;		
 
 		// TODO Auto-generated method stub
 
@@ -39,23 +39,23 @@ public class SinaDailyTask extends Thread {
 		int errCount = 0; //连续出错计数
 		int retry = 0; //重试计数
 		
-		//stocklist.setlastScanID("sh600001");
+		//stocklist.setHistoryRecordScanID("sh600001");
 		
 		do{
 			Log.i(TAG, " curScanStockID:" + curScanStockID + " errCount:" + errCount + " retry:" + retry);
 			if(errCount<1){
-				curScanStockID = stocklist.getlastScanID();
-				Date lastscan_day = new Date(stocklist.getlastScanTime());
+				curScanStockID = stocklist.getHistoryRecordScanID();
+				Date lastscan_day = new Date(stocklist.getHistoryRecordScanTime());
 				Date now_day = new Date();
 				
 				if(curScanStockID==null){
 					break;
 				}
 				
-				if(curScanStockID.equals(StockList.TAIL)){
+				if(curScanStockID.equals(StockList.HISTORY_TAIL)){
 					if(DateUtils.compareDay(lastscan_day, now_day)==0){
 						Log.e(TAG,"last scan time is the same day of the today, ingore");
-						completeID = StockList.TAIL;
+						completeID = StockList.HISTORY_TAIL;
 						break;
 					}else{
 						//new day
@@ -68,7 +68,7 @@ public class SinaDailyTask extends Thread {
 				}
 				
 			}else{
-				if(TencentStockHelper.getInstance().judgeNetwork()){
+				if(SinaStockHelper.getInstance().judgeNetwork()){
 					Log.i(TAG, "www.baidu.com is ok");
 					//网络可用情况下，如果重试超过3次，则说明目的端有问题，取下一个
 					if(retry>3){
@@ -93,38 +93,22 @@ public class SinaDailyTask extends Thread {
 			}
 
 			Log.i(TAG, "curScanStockID:" + curScanStockID);
-			
-/*			if(isCancelled()){
-				Log.i(TAG, "isCancelled, curScanStockID:" + curScanStockID);
-				isAbort = true;
-				break;
-			}*/
-			
-			/*stocklist.next();
-			stocklist.setlastScanTime(System.currentTimeMillis());*/
-			
-			Stock stock = TencentStockHelper.getInstance().get_stock_from_tencent(curScanStockID);
-			if(stock!=null){
-				Log.i(TAG, "a stock done,  stock.id:" + stock.id);
+			Date start_date = new Date();
+			Date end_date = new Date();
+			 
+			ArrayList<HistoryRecord> records = SinaStockHelper.getInstance().get_HistoryRecords_from_sina(curScanStockID, start_date, end_date);
+			if(records!=null){
+				Log.i(TAG, "a stock's records done,  curScanStockID:" + curScanStockID);
 				//lastStockID = stock.id;
 				//实时记录扫描的id到dailyList中
-				//stocklist.setlastScanID(lastStockID);
+				//stocklist.setHistoryRecordScanID(lastStockID);
 				update = true;
-				completeID = stock.id;
+				completeID = curScanStockID;
 				stocklist.next(1);
-				stocklist.setlastScanTime(System.currentTimeMillis());
+				stocklist.setHistoryRecordScanTime(System.currentTimeMillis());
 				errCount = 0;
 				
 				//对比laststock和这个stock是否有变化
-				Stock lastStock = StockListHelper.getInstance().getLastStock(stock.id);
-				
-				if(StockListHelper.isChangeStock(lastStock, stock)){
-					//save stock into history stocks					
-					StockListHelper.getInstance().persistHistoryStock(stock);
-					
-					//save stock into internal storage
-					StockListHelper.getInstance().persistLastStock(stock);
-				}
 				
 				StockListHelper.getInstance().persistStockList(stocklist);
 
@@ -143,7 +127,7 @@ public class SinaDailyTask extends Thread {
 		if(update){
 			if(!isAbort){
 				//完成这次扫描(中途被终止的不算)，记录时间
-				stocklist.setlastScanTime(System.currentTimeMillis());
+				stocklist.setHistoryRecordScanTime(System.currentTimeMillis());
 			}
 			Log.i(TAG, "persistStockList!");
 			StockListHelper.getInstance().persistStockList(stocklist);
