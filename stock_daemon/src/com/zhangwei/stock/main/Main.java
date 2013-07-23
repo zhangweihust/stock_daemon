@@ -1,9 +1,14 @@
 package com.zhangwei.stock.main;
 
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
 import com.zhangwei.stock.net.SinaStockHelper;
 import com.zhangwei.stock.service.TencentDailyTask;
 
@@ -51,7 +56,19 @@ public class Main {
 			e.printStackTrace();
 		} 
 		
-		
+		try {
+			MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+			DB db = mongoClient.getDB( "mydb" );
+			List<String> list = mongoClient.getDatabaseNames();
+			Set<String> colls = db.getCollectionNames();
+
+			for (String s : list) {
+			    System.out.println(s);
+			}
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
