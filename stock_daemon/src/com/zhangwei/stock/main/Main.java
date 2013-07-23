@@ -40,10 +40,12 @@ public class Main {
 		
 		SinaStockHelper ssh = SinaStockHelper.getInstance();
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");//小写的mm表示的是分钟  
-		String dstr="2010-10-10";  
+		String b_str="2013-12-08";
+		String e_str="2011-12-09";  
 		try {
-			java.util.Date end_date=sdf.parse(dstr);
-			ssh.get_HistoryRecords_from_sina("300031", new Date(), end_date);
+			java.util.Date start_date=sdf.parse(b_str);
+			java.util.Date end_date=sdf.parse(e_str);
+			ssh.get_HistoryRecords_from_sina("300031", start_date, end_date);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

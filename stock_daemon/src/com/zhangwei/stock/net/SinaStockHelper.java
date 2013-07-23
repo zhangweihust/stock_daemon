@@ -3,6 +3,7 @@ package com.zhangwei.stock.net;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -71,6 +72,11 @@ public class SinaStockHelper {
 			start_date = tmp;
 		}
 		
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+
+		String str_start_date = myFormat.format(start_date);
+		String str_end_date = myFormat.format(end_date);
+		
 		ArrayList<HistoryRecord> result = new ArrayList<HistoryRecord>();
 		
 		int start_year = start_date.getYear()+1900;
@@ -82,7 +88,7 @@ public class SinaStockHelper {
 		int jidu=start_jidu; //jidu
 		for( ; year>=end_year; year--){
 			while(jidu>=end_jidu || year!=end_year){
-				Log.e(TAG, "processing year:" + year + " jidu:" + jidu);
+				//Log.e(TAG, "processing year:" + year + " jidu:" + jidu);
 				//do..
 				try {
 					Document doc = null;
@@ -102,22 +108,28 @@ public class SinaStockHelper {
 							ArrayList<Element> trs = jh.dump(FundHoldSharesTable_content, "tr");
 							if(trs.size()>1){
 								for(int index=1; index<trs.size() ; index++){
-									Log.e(TAG, trs.get(index).text());
+									
 									
 									//
 									
 									ArrayList<Element> tds = jh.dump(trs.get(index), "td");
 									if(tds!=null && tds.size()==7){
-										HistoryRecord hRecord = new HistoryRecord();
-										
-										hRecord.date = tds.get(0).text();
-										hRecord.op = tds.get(1).text();
-										hRecord.hp = tds.get(2).text();
-										hRecord.cp = tds.get(3).text();
-										hRecord.lp = tds.get(4).text();
-										hRecord.tv = tds.get(5).text();
-										hRecord.ta = tds.get(6).text();
-										result.add(hRecord);
+										String str_date = tds.get(0).text();
+										if(str_date!=null && str_start_date.compareTo(str_date)>=0 && str_date.compareTo(str_end_date)>=0){
+											HistoryRecord hRecord = new HistoryRecord();
+											
+											hRecord.date = tds.get(0).text();
+											hRecord.op = tds.get(1).text();
+											hRecord.hp = tds.get(2).text();
+											hRecord.cp = tds.get(3).text();
+											hRecord.lp = tds.get(4).text();
+											hRecord.tv = tds.get(5).text();
+											hRecord.ta = tds.get(6).text();
+											result.add(hRecord);
+											
+											Log.e(TAG, hRecord.date);
+										}
+
 									}
 									
 								}
